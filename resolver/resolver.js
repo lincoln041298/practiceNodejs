@@ -1,3 +1,4 @@
+const mongoDataMethods = require("../data/db");
 const { books, authors } = require("../data/static");
 const Author = require("../models/Author");
 const Book = require("../models/Book");
@@ -22,14 +23,9 @@ const resolvers = {
 
   //MUTATION
   Mutation: {
-    createAuthor: async (parent, args) => {
-      const newAuthor = new Author(args);
-      return await newAuthor.save();
-    },
-    createBook: async (parent, args) => {
-      const newBook = new Book(args);
-      return await newBook.save();
-    },
+    createAuthor: async (parent, args, {mongoDataMethods}) => await mongoDataMethods.createAuthor(args),
+
+    createBook: async (parent, args) => await mongoDataMethods.createBook(args),
   },
 };
 
