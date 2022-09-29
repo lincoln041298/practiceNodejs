@@ -1,4 +1,4 @@
-require('dotenv').config()
+require("dotenv").config();
 const express = require("express");
 
 const { ApolloServer } = require("apollo-server-express");
@@ -10,26 +10,29 @@ const typeDefs = require("./schema/schema");
 
 const resolvers = require("./resolver/resolver");
 
+const mongoDataMethods = require("./data/db");
+
 const conncetDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log('MongoDB connected')
+    console.log("MongoDB connected");
   } catch (error) {
     console.log(error);
     process.exit(1);
   }
 };
 
-conncetDB()
+conncetDB();
 
 let server = null;
 async function startServer() {
   server = new ApolloServer({
     typeDefs,
     resolvers,
+    context: () => ({ mongoDataMethods }),
   });
   await server.start();
   server.applyMiddleware({ app });
